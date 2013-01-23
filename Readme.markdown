@@ -20,4 +20,4 @@ Mount with `myfs`:
 ## TODO
 
 * After mount, there will be permission issue.
-* Kernel oops will occurs while umount since there is no `kill_super` function.
+* Kernel oops will occurs while umount since there is no `kill_sb` function.
