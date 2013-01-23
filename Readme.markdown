@@ -3,7 +3,7 @@ This is a most simple file system. Maybe too simple to use. I'm writing it for p
 
 ## How to play with these code:
 
-Install kernel src for you kernel. It will install some kernel source for build modules under /lib//modules/<kernel_version>/build.
+Install kernel src for you kernel. It will install some kernel source for build modules under `/lib//modules/<kernel_version>/build`.
 
 Make the module:
 
