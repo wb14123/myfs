@@ -16,3 +16,8 @@ Insert the module to your kernel:
 Mount with `myfs`:
 
 	sudo mount -t myfs none /mnt
+
+## TODO
+
+* After mount, there will be permission issue.
+* Kernel oops will occurs while umount since there is no `kill_super` function.
