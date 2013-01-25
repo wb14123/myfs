@@ -2,6 +2,7 @@
 #include <linux/init.h>
 #include <linux/module.h>
 #include <linux/fs.h>
+#include <linux/slab.h>
 
 #define DEBUG(msg) printk(KERN_ALERT "MYFS: %s\n", msg)
 
@@ -47,10 +48,18 @@ struct dentry *myfs_mount(struct file_system_type *fs_type,
 	return mount_nodev(fs_type, flags, data, myfs_file_super);
 }
 
+void myfs_kill_sb(struct super_block *sb)
+{
+	kfree(sb->s_fs_info);
+	kill_litter_super(sb);
+	DEBUG("umount, i have killed myself...");
+}
+
 static struct file_system_type myfs_type = {
 	.name         = "myfs",
 	.mount        = myfs_mount,
 	.owner        = THIS_MODULE,
+	.kill_sb      = myfs_kill_sb,
 };
 
 
