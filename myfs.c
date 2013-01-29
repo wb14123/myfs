@@ -4,7 +4,7 @@
 #include <linux/fs.h>
 #include <linux/slab.h>
 
-#define DEBUG(msg) printk(KERN_ALERT "MYFS: %s\n", msg)
+#define MYFS_DEBUG(msg) printk(KERN_ALERT "MYFS: %s\n", msg)
 
 #define DEFAULT_MODE      0775
 
@@ -50,15 +50,15 @@ int myfs_file_super(struct super_block *sb, void *data, int slient)
 	inode = myfs_get_inode(sb, NULL, S_IFDIR | DEFAULT_MODE, 0);
 	sb->s_root = d_make_root(inode);
 	if (!sb->s_root)
-		DEBUG("cannot get dentry root");
-	DEBUG("work done, I have mounted");
+		MYFS_DEBUG("cannot get dentry root");
+	MYFS_DEBUG("work done, I have mounted");
 	return 0;
 }
 
 struct dentry *myfs_mount(struct file_system_type *fs_type,
 		int flags, const char *dev_name, void *data)
 {
-	DEBUG("ok, I will mount");
+	MYFS_DEBUG("ok, I will mount");
 	return mount_nodev(fs_type, flags, data, myfs_file_super);
 }
 
@@ -66,7 +66,7 @@ void myfs_kill_sb(struct super_block *sb)
 {
 	kfree(sb->s_fs_info);
 	kill_litter_super(sb);
-	DEBUG("umount, i have killed myself...");
+	MYFS_DEBUG("umount, i have killed myself...");
 }
 
 static struct file_system_type myfs_type = {
@@ -84,18 +84,18 @@ static int __init init_myfs(void)
 {
 	int err;
 
-	DEBUG("hi, I'm myfs");
+	MYFS_DEBUG("hi, I'm myfs");
 
 	err = register_filesystem(&myfs_type);
 	if (err)
-		DEBUG("oh, there is something wrong");
+		MYFS_DEBUG("oh, there is something wrong");
 
 	return 0;
 }
 
 static void __exit exit_myfs(void)
 {
-	DEBUG("bye, world");
+	MYFS_DEBUG("bye, world");
 	unregister_filesystem(&myfs_type);
 }
 
