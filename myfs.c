@@ -6,6 +6,8 @@
 
 #define DEBUG(msg) printk(KERN_ALERT "MYFS: %s\n", msg)
 
+#define DEFAULT_MODE      0775
+
 MODULE_LICENSE("GPL");
 
 struct inode *myfs_get_inode(struct super_block *sb,
@@ -30,9 +32,10 @@ static const struct super_operations myfs_ops ={
 int myfs_file_super(struct super_block *sb, void *data, int slient)
 {
 	struct inode *inode;
+	int err;
 
 	sb->s_op = &myfs_ops;
-	inode = myfs_get_inode(sb, NULL, S_IFDIR, 0);
+	inode = myfs_get_inode(sb, NULL, S_IFDIR | DEFAULT_MODE, 0);
 	sb->s_root = d_make_root(inode);
 	if (!sb->s_root)
 		DEBUG("cannot get dentry root");
