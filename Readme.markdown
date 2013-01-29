@@ -19,4 +19,4 @@ Mount with `myfs`:
 
 ## TODO
 
-* After mount, there will be permission issue.
+* Write inode operations so that at least can create a regular file.
