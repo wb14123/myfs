@@ -10,6 +10,10 @@
 
 MODULE_LICENSE("GPL");
 
+/*
+ * This part is operations about inode
+ */
+
 struct inode *myfs_get_inode(struct super_block *sb,
 		const struct inode *dir, umode_t mode, dev_t dev)
 {
@@ -26,9 +30,17 @@ struct inode *myfs_get_inode(struct super_block *sb,
 	return inode;
 }
 
+/*
+ * This part is operations about super block
+ */
+
 static const struct super_operations myfs_ops ={
 };
 
+/*
+ * This is an intersting function, it makes an inode as a super block's
+ * root. This is who combines inode and super block
+ */
 int myfs_file_super(struct super_block *sb, void *data, int slient)
 {
 	struct inode *inode;
@@ -42,7 +54,6 @@ int myfs_file_super(struct super_block *sb, void *data, int slient)
 	DEBUG("work done, I have mounted");
 	return 0;
 }
-
 
 struct dentry *myfs_mount(struct file_system_type *fs_type,
 		int flags, const char *dev_name, void *data)
@@ -65,6 +76,9 @@ static struct file_system_type myfs_type = {
 	.kill_sb      = myfs_kill_sb,
 };
 
+/*
+ * This part is about linux modules
+ */
 
 static int __init init_myfs(void)
 {
