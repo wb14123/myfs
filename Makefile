@@ -16,4 +16,15 @@ clean :
 distclean : clean
 	-rm -fr $(TARGETS)
 
-.PHONY : all clean distclean
+test :
+	rmmod myfs || true
+	insmod $(PWD)/myfs.ko
+	mount -t myfs none /mnt
+	cd /mnt
+	cd /
+	umount /mnt
+	rmmod myfs
+	dmesg | grep -i --color=auto myfs
+
+
+.PHONY : all clean distclean test
