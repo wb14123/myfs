@@ -11,14 +11,14 @@ all :
 	$(MAKE) -C $(KERNEL_BUILDROOT) SUBDIRS=$(BUILDROOT) modules
 
 clean :
-	-rm -fr $(OBJECTS)
+	-rm -frv $(OBJECTS)
 
 distclean : clean
-	-rm -fr $(TARGETS)
+	-rm -frv $(TARGETS)
 
 test :
 	rmmod myfs || true
-	insmod $(PWD)/myfs.ko
+	insmod $(BUILDROOT)/myfs.ko
 	mount -t myfs none /mnt
 	cd /mnt
 	cd /
