@@ -22,6 +22,7 @@ test :
 	insmod $(BUILDROOT)/myfs.ko
 	mount -t myfs none /mnt
 	cd /mnt
+	touch /mnt/test
 	cd /
 	umount /mnt
 	rmmod myfs
