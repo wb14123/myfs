@@ -17,6 +17,7 @@ distclean : clean
 	-rm -frv $(TARGETS)
 
 test :
+	umount /mnt || true
 	rmmod myfs || true
 	insmod $(BUILDROOT)/myfs.ko
 	mount -t myfs none /mnt

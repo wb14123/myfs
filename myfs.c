@@ -14,6 +14,43 @@ MODULE_LICENSE("GPL");
  * This part is operations about inode
  */
 
+static struct inode *myfs_get_inode(struct super_block *, const struct inode *, umode_t, dev_t);
+
+static int myfs_mknod(struct inode *dir, struct dentry *dentry, umode_t mode, dev_t dev)
+{
+	struct inode *inode = myfs_get_inode(dir->i_sb, dir, mode, dev);
+	int error = -ENOSPC;
+
+	if (inode) {
+		d_instantiate(dentry, inode);
+		dget(dentry);
+		error = 0;
+		dir->i_mtime = dir->i_ctime = CURRENT_TIME;
+	}
+
+	return error;
+}
+
+static int myfs_create(struct inode *dir, struct dentry *dentry, umode_t mode, bool excl)
+{
+	return myfs_mknod(dir, dentry, mode | S_IFREG, 0);
+}
+
+static int myfs_mkdir(struct inode *dir, struct dentry *dentry, umode_t mode)
+{
+	int retval = myfs_mknod(dir, dentry, mode | S_IFDIR, 0);
+	if (!retval)
+		inc_nlink(dir);
+	return retval;
+}
+
+static struct inode_operations myfs_dir_inode_operations = {
+	.create = myfs_create,
+	.lookup = simple_lookup,
+	.mkdir  = myfs_mkdir,
+	.mknod  = myfs_mknod,
+};
+
 static struct inode *myfs_get_inode(struct super_block *sb,
 		const struct inode *dir, umode_t mode, dev_t dev)
 {
@@ -23,7 +60,7 @@ static struct inode *myfs_get_inode(struct super_block *sb,
 		inode->i_ino = get_next_ino();
 		inode_init_owner(inode, dir, mode);
 
-		inode->i_op = &simple_dir_inode_operations;
+		inode->i_op = &myfs_dir_inode_operations;
 		inode->i_fop = &simple_dir_operations;
 	}
 

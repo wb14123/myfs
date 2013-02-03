@@ -19,4 +19,4 @@ Mount with `myfs`:
 
 ## TODO
 
-* Write inode operations so that at least can create a regular file.
+* Complete inode operations
