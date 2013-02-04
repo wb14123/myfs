@@ -19,4 +19,5 @@ Mount with `myfs`:
 
 ## TODO
 
+* The regular file have read and write issues.
 * Complete inode operations
