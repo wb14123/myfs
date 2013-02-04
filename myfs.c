@@ -14,7 +14,8 @@ MODULE_LICENSE("GPL");
  * This part is operations about inode
  */
 
-static struct inode *myfs_get_inode(struct super_block *, const struct inode *, umode_t, dev_t);
+static struct inode
+*myfs_get_inode(struct super_block *, const struct inode *, umode_t, dev_t);
 
 static int myfs_mknod(struct inode *dir, struct dentry *dentry, umode_t mode, dev_t dev)
 {
