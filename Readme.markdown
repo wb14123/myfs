@@ -17,6 +17,10 @@ Mount with `myfs`:
 
 	sudo mount -t myfs none /mnt
 
+Have a test:
+
+	sudo make test
+
 ## TODO
 
 * The regular file have read and write issues.
