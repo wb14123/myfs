@@ -23,6 +23,7 @@ test :
 	mount -t myfs none /mnt
 	cd /mnt
 	touch /mnt/test
+	mkdir -p /mnt/d1/d2
 	cd /
 	umount /mnt
 	rmmod myfs
