@@ -3,7 +3,7 @@ KERNEL_BUILDROOT ?= /lib/modules/$(KERNEL_RELEASE)/build
 BUILDROOT = $(shell pwd)
 
 TARGETS = myfs.ko
-OBJECTS = myfs.o myfs.mod.c myfs.mod.o .myfs.ko.cmd .myfs.mod.o.cmd .myfs.o.cmd .tmp_versions
+OBJECTS = myfs.o myfs.mod.c myfs.mod.o .myfs.ko.cmd .myfs.mod.o.cmd .myfs.o.cmd .tmp_versions modules.order Module.symvers
 
 obj-m := myfs.o
 
