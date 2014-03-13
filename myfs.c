@@ -3,6 +3,7 @@
 #include <linux/module.h>
 #include <linux/fs.h>
 #include <linux/slab.h>
+#include <linux/uaccess.h>
 
 #define MYFS_DEBUG(msg) printk(KERN_ALERT "MYFS: %s\n", msg)
 
@@ -52,6 +53,33 @@ static struct inode_operations myfs_dir_inode_operations = {
 	.mknod  = myfs_mknod,
 };
 
+int myfs_file_open(struct inode *inode, struct file *file) {
+	return 0;
+}
+
+ssize_t myfs_file_read(struct file *file, char __user *user_buf,
+		size_t count, loff_t *ppos) {
+	char buf = 'a';
+	loff_t pos = *ppos;
+	*ppos = 1;
+
+	if (pos < 0)
+		return -EINVAL;
+
+	if (pos > 0)
+		return 0;
+
+	if (copy_to_user(user_buf, &buf, 1))
+		return -EFAULT;
+	else
+		return 1;
+}
+
+static struct file_operations myfs_file_operations = {
+	.open = myfs_file_open,
+	.read = myfs_file_read,
+};
+
 static struct inode *myfs_get_inode(struct super_block *sb,
 		const struct inode *dir, umode_t mode, dev_t dev)
 {
@@ -62,7 +90,10 @@ static struct inode *myfs_get_inode(struct super_block *sb,
 		inode_init_owner(inode, dir, mode);
 
 		inode->i_op = &myfs_dir_inode_operations;
-		inode->i_fop = &simple_dir_operations;
+		if (mode & S_IFDIR)
+			inode->i_fop = &simple_dir_operations;
+		else
+			inode->i_fop = &myfs_file_operations;
 	}
 
 	return inode;
