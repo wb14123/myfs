@@ -75,9 +75,16 @@ ssize_t myfs_file_read(struct file *file, char __user *user_buf,
 		return 1;
 }
 
+ssize_t myfs_file_write(struct file *file, const char __user *user_buf,
+		size_t count, loff_t *ppos) {
+	*ppos = *ppos + count;
+	return count;
+}
+
 static struct file_operations myfs_file_operations = {
 	.open = myfs_file_open,
 	.read = myfs_file_read,
+	.write = myfs_file_write,
 };
 
 static struct inode *myfs_get_inode(struct super_block *sb,
