@@ -57,14 +57,16 @@ static struct inode_operations myfs_dir_inode_operations = {
 	.mknod  = myfs_mknod,
 };
 
-int myfs_file_open(struct inode *inode, struct file *file) {
+int myfs_file_open(struct inode *inode, struct file *file)
+{
 	printk(KERN_ALERT "MYFS: i_ino %ld\n", inode->i_ino);
 	file -> private_data = &(buffer[inode->i_ino]);
 	return 0;
 }
 
 ssize_t myfs_file_read(struct file *file, char __user *user_buf,
-		size_t count, loff_t *ppos) {
+		size_t count, loff_t *ppos)
+{
 	loff_t pos = *ppos;
 	*ppos = 1;
 
@@ -80,7 +82,8 @@ ssize_t myfs_file_read(struct file *file, char __user *user_buf,
 }
 
 ssize_t myfs_file_write(struct file *file, const char __user *user_buf,
-		size_t count, loff_t *ppos) {
+		size_t count, loff_t *ppos)
+{
 	loff_t pos = *ppos;
 	*ppos = pos + count;
 	if (pos < 0)
