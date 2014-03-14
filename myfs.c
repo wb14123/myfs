@@ -11,6 +11,10 @@
 
 MODULE_LICENSE("GPL");
 
+#define BUFFER_SIZE	102400
+
+static char buffer[BUFFER_SIZE];
+
 /*
  * This part is operations about inode
  */
@@ -54,22 +58,22 @@ static struct inode_operations myfs_dir_inode_operations = {
 };
 
 int myfs_file_open(struct inode *inode, struct file *file) {
+	printk(KERN_ALERT "MYFS: i_ino %ld\n", inode->i_ino);
+	file -> private_data = &(buffer[inode->i_ino]);
 	return 0;
 }
 
 ssize_t myfs_file_read(struct file *file, char __user *user_buf,
 		size_t count, loff_t *ppos) {
-	char buf = 'a';
 	loff_t pos = *ppos;
 	*ppos = 1;
 
 	if (pos < 0)
 		return -EINVAL;
-
 	if (pos > 0)
 		return 0;
 
-	if (copy_to_user(user_buf, &buf, 1))
+	if (copy_to_user(user_buf, file -> private_data, 1))
 		return -EFAULT;
 	else
 		return 1;
@@ -77,8 +81,17 @@ ssize_t myfs_file_read(struct file *file, char __user *user_buf,
 
 ssize_t myfs_file_write(struct file *file, const char __user *user_buf,
 		size_t count, loff_t *ppos) {
-	*ppos = *ppos + count;
-	return count;
+	loff_t pos = *ppos;
+	*ppos = pos + count;
+	if (pos < 0)
+		return -EINVAL;
+	if (pos > 0)
+		return count;
+
+	if (copy_from_user(file -> private_data, user_buf, 1))
+		return -EFAULT;
+	else
+		return count;
 }
 
 static struct file_operations myfs_file_operations = {
